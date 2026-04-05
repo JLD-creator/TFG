@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipoController;
+use App\Http\Controllers\TorneoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,4 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/equipos', [EquipoController::class, 'store']);
 
     Route::post('/equipos/{id}/unirse', [EquipoController::class, 'unirse']);
+
+    Route::get('/torneos', [TorneoController::class, 'index']);
+    Route::get('/torneos/create', [TorneoController::class, 'create']);
+    Route::post('/torneos', [TorneoController::class, 'store']);
+
+    Route::post('/torneos/{id}/inscribirse', [TorneoController::class, 'inscribirse']);
 });
