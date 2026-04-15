@@ -33,4 +33,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/torneos', [TorneoController::class, 'store']);
 
     Route::post('/torneos/{id}/inscribirse', [TorneoController::class, 'inscribirse']);
+    Route::post('/torneos/{id}/bracket', [TorneoController::class, 'generarBracket']);
 });

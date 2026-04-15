@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inscripcion;
+use App\Models\Partido;
 use App\Models\Torneo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -64,5 +65,37 @@ class TorneoController extends Controller
         }
 
         return redirect('/torneos');
+    }
+
+    public function generarBracket(int $torneo_id): RedirectResponse
+    {
+        if (Partido::where('id_torneo', $torneo_id)->exists()) {
+            return back()->with('error', 'Ya existe bracket');
+        }
+
+        $equipos = Inscripcion::where('id_torneo', $torneo_id)
+            ->pluck('id_equipo')
+            ->toArray();
+
+        if (count($equipos) < 2) {
+            return back()->with('error', 'No hay suficientes equipos');
+        }
+
+        shuffle($equipos);
+
+        for ($i = 0; $i < count($equipos); $i += 2) {
+            if (! isset($equipos[$i + 1])) {
+                break;
+            }
+
+            Partido::create([
+                'id_torneo' => $torneo_id,
+                'id_equipo1' => $equipos[$i],
+                'id_equipo2' => $equipos[$i + 1],
+                'ronda' => 1,
+            ]);
+        }
+
+        return redirect('/torneos')->with('success', 'Bracket generado');
     }
 }

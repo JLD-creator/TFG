@@ -17,6 +17,12 @@
         </div>
     @endif
 
+    @if (session('success'))
+        <div>
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
+
     @if ($errors->any())
         <div>
             <ul>
@@ -38,6 +44,11 @@
             <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/inscribirse">
                 @csrf
                 <button type="submit">Inscribirse</button>
+            </form>
+
+            <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/bracket">
+                @csrf
+                <button type="submit">Generar Bracket</button>
             </form>
         </div>
     @empty
