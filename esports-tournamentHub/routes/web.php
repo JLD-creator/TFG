@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipoController;
+use App\Http\Controllers\PartidoController;
 use App\Http\Controllers\TorneoController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +35,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/torneos/{id}/inscribirse', [TorneoController::class, 'inscribirse']);
     Route::post('/torneos/{id}/bracket', [TorneoController::class, 'generarBracket']);
+    Route::get('/torneos/{id}/bracket', [PartidoController::class, 'verBracket']);
+
+    Route::get('/partidos/{id}/resultado', [PartidoController::class, 'edit']);
+    Route::post('/partidos/{id}/resultado', [PartidoController::class, 'guardarResultado']);
 });

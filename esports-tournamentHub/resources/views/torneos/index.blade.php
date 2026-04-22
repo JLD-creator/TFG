@@ -50,6 +50,28 @@
                 @csrf
                 <button type="submit">Generar Bracket</button>
             </form>
+
+            <p><a href="/torneos/{{ $torneo->id_torneo }}/bracket">Ver bracket</a></p>
+
+            @if ($torneo->partidos->isNotEmpty())
+                <h4>Partidos</h4>
+                @foreach ($torneo->partidos as $partido)
+                    <div>
+                        <p>
+                            {{ $partido->equipo1?->nombre_equipo ?? 'Equipo 1' }}
+                            vs
+                            {{ $partido->equipo2?->nombre_equipo ?? 'Equipo 2' }}
+                        </p>
+                        <p>
+                            Resultado:
+                            {{ $partido->resultado_equipo1 ?? '-' }}
+                            -
+                            {{ $partido->resultado_equipo2 ?? '-' }}
+                        </p>
+                        <a href="/partidos/{{ $partido->id_partido }}/resultado">Introducir resultado</a>
+                    </div>
+                @endforeach
+            @endif
         </div>
     @empty
         <p>No hay torneos creados todavía.</p>

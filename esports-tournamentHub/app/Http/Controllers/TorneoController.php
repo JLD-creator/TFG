@@ -14,7 +14,7 @@ class TorneoController extends Controller
 {
     public function index(): View
     {
-        $torneos = Torneo::all();
+        $torneos = Torneo::with(['partidos.equipo1', 'partidos.equipo2'])->get();
 
         return view('torneos.index', compact('torneos'));
     }
