@@ -1,33 +1,46 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro</title>
-</head>
-<body>
-    <h1>Registro de usuario</h1>
+@extends('layouts.app')
 
-    @if ($errors->any())
-        <div>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+@section('content')
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-5">
+            <div class="glass-card p-4 p-lg-5">
+                <h1 class="h2 fw-bold mb-3">Registro de usuario</h1>
+                <p class="text-muted">Crea una cuenta para empezar a usar la plataforma.</p>
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form method="POST" action="/register" class="mt-4">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre</label>
+                        <input id="name" class="form-control" type="text" name="name" value="{{ old('name') }}" placeholder="Tu nombre">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input id="email" class="form-control" type="email" name="email" value="{{ old('email') }}" placeholder="tu@email.com">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contrasena</label>
+                        <input id="password" class="form-control" type="password" name="password" placeholder="Minimo 8 caracteres">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                        <a href="/login" class="btn btn-outline-light">Ya tienes cuenta? Inicia sesion</a>
+                    </div>
+                </form>
+            </div>
         </div>
-    @endif
-
-    <form method="POST" action="/register">
-        @csrf
-
-        <input type="text" name="name" placeholder="Nombre" value="{{ old('name') }}">
-        <input type="email" name="email" placeholder="Email" value="{{ old('email') }}">
-        <input type="password" name="password" placeholder="Contraseña">
-
-        <button type="submit">Registrarse</button>
-    </form>
-
-    <p><a href="/login">¿Ya tienes cuenta? Inicia sesión</a></p>
-</body>
-</html>
+    </div>
+@endsection

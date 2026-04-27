@@ -1,31 +1,30 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear equipo</title>
-</head>
-<body>
-    <h1>Crear equipo</h1>
+@extends('layouts.app')
 
-    @if ($errors->any())
-        <div>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+@section('content')
+    <div class="glass-card p-4 p-lg-5">
+        <h1 class="display-6 fw-bold mb-3">Crear equipo</h1>
+        <p class="text-muted">Pon un nombre al equipo y quedara asociado a tu usuario como capitan.</p>
 
-    <form method="POST" action="/equipos">
-        @csrf
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <input type="text" name="nombre_equipo" placeholder="Nombre del equipo" value="{{ old('nombre_equipo') }}">
+        <form method="POST" action="/equipos" class="mt-4">
+            @csrf
 
-        <button type="submit">Crear</button>
-    </form>
+            <div class="mb-3">
+                <label for="nombre_equipo" class="form-label">Nombre del equipo</label>
+                <input id="nombre_equipo" class="form-control" type="text" name="nombre_equipo" placeholder="Ejemplo: Nexus Wolves" value="{{ old('nombre_equipo') }}">
+            </div>
 
-    <p><a href="/equipos">Volver a equipos</a></p>
-</body>
-</html>
+            <button type="submit" class="btn btn-primary">Crear</button>
+            <a href="/equipos" class="btn btn-outline-light ms-2">Volver</a>
+        </form>
+    </div>
+@endsection

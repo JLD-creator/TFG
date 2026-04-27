@@ -1,30 +1,28 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Torneos</title>
-</head>
-<body>
-    <h1>Torneos</h1>
+@extends('layouts.app')
 
-    <p><a href="/dashboard">Volver al dashboard</a></p>
-    <p><a href="/torneos/create">Crear torneo</a></p>
+@section('content')
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h1 class="display-6 fw-bold mb-1">Torneos</h1>
+            <p class="text-muted mb-0">Crea competiciones, inscribe equipos y gestiona el bracket.</p>
+        </div>
+        <a href="/torneos/create" class="btn btn-primary">Crear torneo</a>
+    </div>
 
     @if (session('error'))
-        <div>
+        <div class="alert alert-danger">
             <p>{{ session('error') }}</p>
         </div>
     @endif
 
     @if (session('success'))
-        <div>
+        <div class="alert alert-success">
             <p>{{ session('success') }}</p>
         </div>
     @endif
 
     @if ($errors->any())
-        <div>
+        <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -34,52 +32,33 @@
     @endif
 
     @forelse($torneos as $torneo)
-        <div>
-            <h3>{{ $torneo->nombre }}</h3>
-            <p>{{ $torneo->juego }}</p>
-            <p>Tipo: {{ $torneo->tipo_torneo }}</p>
-            <p>Fecha: {{ $torneo->fecha_inicio }}</p>
-            <p>Estado: {{ $torneo->estado }}</p>
+        <div class="glass-card p-4 mb-3">
+            <div class="row g-3 align-items-start">
+                <div class="col-lg-6">
+                    <h3 class="h4 mb-1">{{ $torneo->nombre }}</h3>
+                    <p class="mb-1 text-muted">{{ $torneo->juego }}</p>
+                    <p class="mb-1"><strong>Tipo:</strong> {{ $torneo->tipo_torneo }}</p>
+                    <p class="mb-0"><strong>Estado:</strong> {{ $torneo->estado }}</p>
+                </div>
 
-            <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/inscribirse">
-                @csrf
-                <button type="submit">Inscribirse</button>
-            </form>
+                <div class="col-lg-6">
+                    <div class="d-flex flex-wrap gap-2 justify-content-lg-end">
+                        <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/inscribirse" class="mb-0">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-light">Inscribirse</button>
+                        </form>
 
-            <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/bracket">
-                @csrf
-                <button type="submit">Generar Bracket</button>
-            </form>
+                        <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/bracket" class="mb-0">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Generar Bracket</button>
+                        </form>
 
-            <p><a href="/torneos/{{ $torneo->id_torneo }}/bracket">Ver bracket</a></p>
-
-            @if ($torneo->partidos->isNotEmpty())
-                <h4>Partidos</h4>
-                @foreach ($torneo->partidos as $partido)
-                    <div>
-                        <p>
-                            {{ $partido->equipo1?->nombre_equipo ?? 'Equipo 1' }}
-                            vs
-                            {{ $partido->equipo2?->nombre_equipo ?? 'Equipo 2' }}
-                        </p>
-                        <p>
-                            Resultado:
-                            {{ $partido->resultado_equipo1 ?? '-' }}
-                            -
-                            {{ $partido->resultado_equipo2 ?? '-' }}
-                        </p>
-                        <a href="/partidos/{{ $partido->id_partido }}/resultado">Introducir resultado</a>
+                        <a href="/torneos/{{ $torneo->id_torneo }}/bracket" class="btn btn-outline-info">Ver bracket</a>
                     </div>
-                @endforeach
-            @endif
+                </div>
+            </div>
         </div>
     @empty
-        <p>No hay torneos creados todavía.</p>
+        <div class="alert alert-info">No hay torneos creados todavia.</div>
     @endforelse
-
-    <form method="POST" action="/logout">
-        @csrf
-        <button type="submit">Cerrar sesión</button>
-    </form>
-</body>
-</html>
+@endsection

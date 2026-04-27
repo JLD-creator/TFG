@@ -1,47 +1,50 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bracket del torneo</title>
-</head>
-<body>
-    <h1>Bracket de {{ $torneo->nombre }}</h1>
+@extends('layouts.app')
 
-    <p><a href="/torneos">Volver a torneos</a></p>
+@section('content')
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h1 class="display-6 fw-bold mb-1">Bracket</h1>
+            <p class="text-muted mb-0">Visualiza rondas, partidos y ganadores del torneo.</p>
+        </div>
+        <a href="/torneos" class="btn btn-outline-light">Volver a torneos</a>
+    </div>
 
     @if ($partidos->isEmpty())
-        <p>Este torneo todavía no tiene partidos generados.</p>
+        <div class="alert alert-info">Este torneo todavia no tiene partidos generados.</div>
     @else
-        <div style="display:flex; gap:40px; align-items:flex-start; flex-wrap:wrap;">
+        <div class="row g-4">
             @foreach($partidos as $ronda => $partidosRonda)
-                <div>
-                    <h2>Ronda {{ $ronda }}</h2>
+                <div class="col-md-6 col-xl-3 round-column">
+                    <div class="glass-soft p-3 h-100">
+                        <h2 class="h4 fw-bold mb-3">Ronda {{ $ronda }}</h2>
 
-                    @foreach($partidosRonda as $partido)
-                        <div style="border:1px solid black; padding:10px; margin-bottom:10px; min-width:220px;">
-                            <p>
-                                {{ $partido->equipo1->nombre_equipo ?? 'TBD' }}
-                                vs
-                                {{ $partido->equipo2->nombre_equipo ?? 'TBD' }}
-                            </p>
+                        @foreach($partidosRonda as $partido)
+                            <div class="card bracket-card bg-dark text-light border-secondary mb-3">
+                                <div class="card-body">
+                                    <p class="mb-2 fw-semibold">
+                                        {{ $partido->equipo1->nombre_equipo ?? 'TBD' }}
+                                        vs
+                                        {{ $partido->equipo2->nombre_equipo ?? 'TBD' }}
+                                    </p>
 
-                            <p>
-                                {{ $partido->resultado_equipo1 ?? '-' }}
-                                -
-                                {{ $partido->resultado_equipo2 ?? '-' }}
-                            </p>
+                                    <p class="mb-2 text-info">
+                                        {{ $partido->resultado_equipo1 ?? '-' }} -
+                                        {{ $partido->resultado_equipo2 ?? '-' }}
+                                    </p>
 
-                            @if($partido->equipoGanador)
-                                <strong>Ganador: {{ $partido->equipoGanador->nombre_equipo }}</strong>
-                            @endif
-
-                            <p><a href="/partidos/{{ $partido->id_partido }}/resultado">Introducir resultado</a></p>
-                        </div>
-                    @endforeach
+                                    @if($partido->ganador)
+                                        <strong class="text-success">
+                                            Ganador: {{ $partido->equipoGanador->nombre_equipo ?? $partido->ganador }}
+                                        </strong>
+                                    @else
+                                        <span class="text-muted">Pendiente de jugar</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             @endforeach
         </div>
     @endif
-</body>
-</html>
+@endsection
