@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EquipoController;
+use App\Http\Controllers\EstadisticasController;
 use App\Http\Controllers\PartidoController;
 use App\Http\Controllers\TorneoController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,8 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout']);
+
+Route::get('/estadisticas', [EstadisticasController::class, 'index']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

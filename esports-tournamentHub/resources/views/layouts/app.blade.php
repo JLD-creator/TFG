@@ -159,6 +159,7 @@
                     <a href="/" class="nav-link">Inicio</a>
                     <a href="/equipos" class="nav-link">Equipos</a>
                     <a href="/torneos" class="nav-link">Torneos</a>
+                    <a href="/estadisticas" class="nav-link">Estadisticas</a>
                     @auth
                         <a href="/dashboard" class="nav-link">Dashboard</a>
                     @endauth
