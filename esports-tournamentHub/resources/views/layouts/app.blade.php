@@ -162,12 +162,19 @@
                     <a href="/estadisticas" class="nav-link">Estadisticas</a>
                     @auth
                         <a href="/dashboard" class="nav-link">Dashboard</a>
+                        <a href="/perfil" class="nav-link">Mi perfil</a>
+                        @if (auth()->user()->esAdmin())
+                            <a href="/admin/usuarios" class="nav-link">Usuarios</a>
+                        @endif
                     @endauth
                 </div>
 
                 <div class="d-flex align-items-center gap-3 flex-wrap">
                     @auth
-                        <span class="fw-semibold">{{ auth()->user()->name }}</span>
+                        <div class="text-end">
+                            <div class="fw-semibold">{{ auth()->user()->name }}</div>
+                            <div class="small text-uppercase text-muted">{{ auth()->user()->rol }}</div>
+                        </div>
 
                         <form method="POST" action="/logout" class="mb-0">
                             @csrf

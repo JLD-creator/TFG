@@ -50,11 +50,21 @@ class User extends Authenticatable
 
     public function esAdmin(): bool
     {
-        return $this->rol == 'admin';
+        return $this->rol === 'admin';
     }
 
     public function esOrganizador(): bool
     {
-        return $this->rol == 'organizador';
+        return $this->rol === 'organizador';
+    }
+
+    public function esJugador(): bool
+    {
+        return $this->rol === 'jugador';
+    }
+
+    public function tieneRol(string ...$roles): bool
+    {
+        return in_array($this->rol, $roles, true);
     }
 }

@@ -39,6 +39,12 @@
                                     @else
                                         <span class="text-muted">Pendiente de jugar</span>
                                     @endif
+
+                                    @if (auth()->user()->tieneRol('organizador', 'admin'))
+                                        <div class="mt-3">
+                                            <a href="/partidos/{{ $partido->id_partido }}/resultado" class="btn btn-sm btn-outline-light">Registrar resultado</a>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach

@@ -6,7 +6,9 @@
             <h1 class="display-6 fw-bold mb-1">Torneos</h1>
             <p class="text-muted mb-0">Crea competiciones, inscribe equipos y gestiona el bracket.</p>
         </div>
-        <a href="/torneos/create" class="btn btn-primary">Crear torneo</a>
+        @if (auth()->user()->tieneRol('organizador', 'admin'))
+            <a href="/torneos/create" class="btn btn-primary">Crear torneo</a>
+        @endif
     </div>
 
     @if (session('error'))
@@ -43,15 +45,19 @@
 
                 <div class="col-lg-6">
                     <div class="d-flex flex-wrap gap-2 justify-content-lg-end">
-                        <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/inscribirse" class="mb-0">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-light">Inscribirse</button>
-                        </form>
+                        @if (auth()->user()->esJugador())
+                            <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/inscribirse" class="mb-0">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-light">Inscribirse</button>
+                            </form>
+                        @endif
 
-                        <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/bracket" class="mb-0">
-                            @csrf
-                            <button type="submit" class="btn btn-primary">Generar Bracket</button>
-                        </form>
+                        @if (auth()->user()->tieneRol('organizador', 'admin'))
+                            <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/bracket" class="mb-0">
+                                @csrf
+                                <button type="submit" class="btn btn-primary">Generar Bracket</button>
+                            </form>
+                        @endif
 
                         <a href="/torneos/{{ $torneo->id_torneo }}/bracket" class="btn btn-outline-info">Ver bracket</a>
                     </div>
