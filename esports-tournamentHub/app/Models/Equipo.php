@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-
 class Equipo extends Model
 {
     protected $fillable = [
@@ -37,5 +36,10 @@ class Equipo extends Model
     public function inscripciones(): HasMany
     {
         return $this->hasMany(Inscripcion::class, 'id_equipo', 'id_equipo');
+    }
+
+    public function invitaciones(): HasMany
+    {
+        return $this->hasMany(InvitacionEquipo::class, 'id_equipo', 'id_equipo');
     }
 }

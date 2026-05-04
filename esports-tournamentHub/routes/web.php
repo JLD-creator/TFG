@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\EstadisticasController;
+use App\Http\Controllers\InvitacionEquipoController;
 use App\Http\Controllers\PartidoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TorneoController;
@@ -39,6 +40,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/equipos/create', [EquipoController::class, 'create']);
         Route::post('/equipos', [EquipoController::class, 'store']);
         Route::post('/equipos/{id}/unirse', [EquipoController::class, 'unirse']);
+        Route::post('/equipos/{equipo}/salir', [EquipoController::class, 'salir']);
+        Route::post('/equipos/{equipo}/miembros/{usuarioId}/expulsar', [EquipoController::class, 'expulsarMiembro']);
+        Route::post('/equipos/{equipo}/invitar', [InvitacionEquipoController::class, 'store']);
+        Route::post('/invitaciones-equipo/{invitacion}/aceptar', [InvitacionEquipoController::class, 'accept']);
+        Route::post('/invitaciones-equipo/{invitacion}/rechazar', [InvitacionEquipoController::class, 'reject']);
         Route::post('/torneos/{id}/inscribirse', [TorneoController::class, 'inscribirse']);
     });
 
