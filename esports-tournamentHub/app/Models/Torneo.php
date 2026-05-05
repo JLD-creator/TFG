@@ -12,6 +12,7 @@ class Torneo extends Model
         'juego',
         'tipo_torneo',
         'fecha_inicio',
+        'normas',
         'estado',
     ];
 

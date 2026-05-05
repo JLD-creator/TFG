@@ -41,6 +41,17 @@
                 <input id="fecha_inicio" class="form-control" type="date" name="fecha_inicio" value="{{ old('fecha_inicio') }}">
             </div>
 
+            <div class="mb-3">
+                <label for="normas" class="form-label">Normas del torneo</label>
+                <textarea
+                    id="normas"
+                    class="form-control"
+                    name="normas"
+                    rows="5"
+                    placeholder="Ejemplo: formato BO3, horario de check-in, prohibiciones, criterios de desempate..."
+                >{{ old('normas') }}</textarea>
+            </div>
+
             <button type="submit" class="btn btn-primary">Crear</button>
             <a href="/torneos" class="btn btn-outline-light ms-2">Volver</a>
         </form>

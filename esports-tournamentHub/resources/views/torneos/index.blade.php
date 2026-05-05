@@ -40,7 +40,11 @@
                     <h3 class="h4 mb-1">{{ $torneo->nombre }}</h3>
                     <p class="mb-1 text-muted">{{ $torneo->juego }}</p>
                     <p class="mb-1"><strong>Tipo:</strong> {{ $torneo->tipo_torneo }}</p>
-                    <p class="mb-0"><strong>Estado:</strong> {{ $torneo->estado }}</p>
+                    <p class="mb-1"><strong>Estado:</strong> {{ $torneo->estado }}</p>
+                    <p class="mb-0">
+                        <strong>Normas:</strong><br>
+                        <span class="text-muted">{{ $torneo->normas }}</span>
+                    </p>
                 </div>
 
                 <div class="col-lg-6">

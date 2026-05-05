@@ -20,9 +20,9 @@ class PartidoController extends Controller
 
     public function guardarResultado(Request $request, int $id): RedirectResponse
     {
-        $partido = Partido::findOrFail($id);
+        $partido = Partido::with('torneo')->findOrFail($id);
 
-        if ($partido->ganador !== null) {
+        if ($partido->resultado_equipo1 !== null || $partido->resultado_equipo2 !== null) {
             return back()->with('error', 'Este partido ya tiene resultado');
         }
 
@@ -39,6 +39,10 @@ class PartidoController extends Controller
         } elseif ($resultado2 > $resultado1) {
             $ganador = $partido->id_equipo2;
         } else {
+            if ($partido->torneo->tipo_torneo !== 'liga') {
+                return back()->with('error', 'En eliminacion directa no se permiten empates.');
+            }
+
             $ganador = null;
         }
 
@@ -50,6 +54,12 @@ class PartidoController extends Controller
 
         $torneoId = $partido->id_torneo;
         $rondaActual = $partido->ronda;
+
+        if ($partido->torneo->tipo_torneo === 'liga') {
+            $this->finalizarLigaSiCorresponde($torneoId);
+
+            return redirect('/torneos')->with('success', 'Resultado guardado');
+        }
 
         $pendientes = Partido::where('id_torneo', $torneoId)
             ->where('ronda', $rondaActual)
@@ -65,6 +75,8 @@ class PartidoController extends Controller
 
     public function verBracket(int $torneoId): View
     {
+        $torneo = Torneo::findOrFail($torneoId);
+
         $partidos = Partido::with(['equipo1', 'equipo2', 'equipoGanador'])
             ->where('id_torneo', $torneoId)
             ->orderBy('ronda')
@@ -72,9 +84,11 @@ class PartidoController extends Controller
             ->get()
             ->groupBy('ronda');
 
-        $torneo = Torneo::findOrFail($torneoId);
+        $clasificacion = $torneo->tipo_torneo === 'liga'
+            ? $this->calcularClasificacionLiga($torneoId)
+            : collect();
 
-        return view('torneos.bracket', compact('partidos', 'torneo'));
+        return view('torneos.bracket', compact('partidos', 'torneo', 'clasificacion'));
     }
 
     private function generarSiguienteRonda(int $torneoId, int $rondaActual): void
@@ -151,5 +165,85 @@ class PartidoController extends Controller
         ]);
 
         return $ganadores;
+    }
+
+    private function finalizarLigaSiCorresponde(int $torneoId): void
+    {
+        $pendientes = Partido::where('id_torneo', $torneoId)
+            ->where(function ($query) {
+                $query->whereNull('resultado_equipo1')
+                    ->orWhereNull('resultado_equipo2');
+            })
+            ->count();
+
+        if ($pendientes === 0) {
+            Torneo::where('id_torneo', $torneoId)->update(['estado' => 'finalizado']);
+        }
+    }
+
+    private function calcularClasificacionLiga(int $torneoId): Collection
+    {
+        $partidos = Partido::with(['equipo1', 'equipo2'])
+            ->where('id_torneo', $torneoId)
+            ->whereNotNull('resultado_equipo1')
+            ->whereNotNull('resultado_equipo2')
+            ->get();
+
+        $tabla = collect();
+
+        foreach ($partidos as $partido) {
+            foreach ([
+                ['equipo' => $partido->equipo1, 'favor' => $partido->resultado_equipo1, 'contra' => $partido->resultado_equipo2],
+                ['equipo' => $partido->equipo2, 'favor' => $partido->resultado_equipo2, 'contra' => $partido->resultado_equipo1],
+            ] as $fila) {
+                if (! $fila['equipo']) {
+                    continue;
+                }
+
+                $idEquipo = $fila['equipo']->id_equipo;
+
+                if (! $tabla->has($idEquipo)) {
+                    $tabla->put($idEquipo, [
+                        'equipo' => $fila['equipo']->nombre_equipo,
+                        'puntos' => 0,
+                        'jugados' => 0,
+                        'victorias' => 0,
+                        'empates' => 0,
+                        'derrotas' => 0,
+                        'favor' => 0,
+                        'contra' => 0,
+                    ]);
+                }
+
+                $registro = $tabla->get($idEquipo);
+                $registro['jugados']++;
+                $registro['favor'] += $fila['favor'];
+                $registro['contra'] += $fila['contra'];
+
+                if ($fila['favor'] > $fila['contra']) {
+                    $registro['victorias']++;
+                    $registro['puntos'] += 3;
+                } elseif ($fila['favor'] === $fila['contra']) {
+                    $registro['empates']++;
+                    $registro['puntos'] += 1;
+                } else {
+                    $registro['derrotas']++;
+                }
+
+                $tabla->put($idEquipo, $registro);
+            }
+        }
+
+        return $tabla
+            ->map(function (array $registro) {
+                $registro['diferencia'] = $registro['favor'] - $registro['contra'];
+
+                return $registro;
+            })
+            ->sort(function (array $a, array $b) {
+                return [$b['puntos'], $b['diferencia'], $b['favor']]
+                    <=> [$a['puntos'], $a['diferencia'], $a['favor']];
+            })
+            ->values();
     }
 }

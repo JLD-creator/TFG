@@ -20,6 +20,7 @@
                             <th>Equipo</th>
                             <th>Victorias</th>
                             <th>Derrotas</th>
+                            <th>% Victorias</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,6 +30,7 @@
                                 <td>{{ $equipo['equipo'] }}</td>
                                 <td>{{ $equipo['victorias'] }}</td>
                                 <td>{{ $equipo['derrotas'] }}</td>
+                                <td>{{ number_format($equipo['porcentaje_victorias'], 2) }}%</td>
                             </tr>
                         @endforeach
                     </tbody>

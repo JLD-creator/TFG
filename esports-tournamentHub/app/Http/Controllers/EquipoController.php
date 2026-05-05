@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipo;
 use App\Models\InvitacionEquipo;
+use App\Models\Inscripcion;
+use App\Models\Partido;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +28,61 @@ class EquipoController extends Controller
     public function create(): View
     {
         return view('equipos.create');
+    }
+
+    public function historial(Equipo $equipo): View
+    {
+        $partidos = Partido::with(['torneo', 'equipo1', 'equipo2', 'equipoGanador'])
+            ->where(function ($query) use ($equipo) {
+                $query->where('id_equipo1', $equipo->id_equipo)
+                    ->orWhere('id_equipo2', $equipo->id_equipo);
+            })
+            ->orderByDesc('ronda')
+            ->orderByDesc('id_partido')
+            ->get();
+
+        $resumen = [
+            'jugados' => $partidos->whereNotNull('resultado_equipo1')->whereNotNull('resultado_equipo2')->count(),
+            'victorias' => $partidos->where('ganador', $equipo->id_equipo)->count(),
+            'derrotas' => $partidos->whereNotNull('ganador')->where('ganador', '!=', $equipo->id_equipo)->count(),
+            'empates' => $partidos
+                ->whereNull('ganador')
+                ->whereNotNull('resultado_equipo1')
+                ->whereNotNull('resultado_equipo2')
+                ->count(),
+        ];
+
+        $torneosDisputados = Inscripcion::with('torneo')
+            ->where('id_equipo', $equipo->id_equipo)
+            ->get()
+            ->map(function (Inscripcion $inscripcion) use ($equipo, $partidos) {
+                $torneo = $inscripcion->torneo;
+                $partidosTorneo = $partidos->where('id_torneo', $torneo->id_torneo);
+                $jugados = $partidosTorneo->whereNotNull('resultado_equipo1')->whereNotNull('resultado_equipo2')->count();
+                $victorias = $partidosTorneo->where('ganador', $equipo->id_equipo)->count();
+                $derrotas = $partidosTorneo->whereNotNull('ganador')->where('ganador', '!=', $equipo->id_equipo)->count();
+                $empates = $partidosTorneo
+                    ->whereNull('ganador')
+                    ->whereNotNull('resultado_equipo1')
+                    ->whereNotNull('resultado_equipo2')
+                    ->count();
+
+                return [
+                    'nombre' => $torneo->nombre,
+                    'juego' => $torneo->juego,
+                    'tipo' => $torneo->tipo_torneo,
+                    'estado' => $torneo->estado,
+                    'fecha_inicio' => $torneo->fecha_inicio,
+                    'jugados' => $jugados,
+                    'victorias' => $victorias,
+                    'empates' => $empates,
+                    'derrotas' => $derrotas,
+                ];
+            })
+            ->sortByDesc('fecha_inicio')
+            ->values();
+
+        return view('equipos.historial', compact('equipo', 'partidos', 'resumen', 'torneosDisputados'));
     }
 
     public function store(Request $request): RedirectResponse

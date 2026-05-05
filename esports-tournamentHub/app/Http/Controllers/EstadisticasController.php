@@ -25,10 +25,16 @@ class EstadisticasController extends Controller
                 ->whereNotNull('ganador')
                 ->count();
 
+            $partidosResueltos = $victorias + $derrotas;
+            $porcentajeVictorias = $partidosResueltos > 0
+                ? round(($victorias / $partidosResueltos) * 100, 2)
+                : 0;
+
             $stats[] = [
                 'equipo' => $equipo->nombre_equipo,
                 'victorias' => $victorias,
                 'derrotas' => $derrotas,
+                'porcentaje_victorias' => $porcentajeVictorias,
             ];
         }
 

@@ -82,6 +82,9 @@
                             Solo los jugadores pueden crear equipos y unirse a ellos.
                         @endif
                     </p>
+                    <div class="mt-3">
+                        <a href="/equipos/{{ $equipo->id_equipo }}/historial" class="btn btn-sm btn-outline-info">Ver historial de partidos</a>
+                    </div>
                 </div>
 
                 <div class="w-100 w-md-auto">
