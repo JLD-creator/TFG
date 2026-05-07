@@ -7,22 +7,6 @@
                 <h1 class="display-6 fw-bold mb-3">Mi perfil</h1>
                 <p class="text-muted">Actualiza tus datos personales y cambia tu contrasena cuando lo necesites.</p>
 
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        <p class="mb-0">{{ session('success') }}</p>
-                    </div>
-                @endif
-
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <form method="POST" action="/perfil" class="mt-4">
                     @csrf
 

@@ -7,16 +7,6 @@
                 <h1 class="h2 fw-bold mb-3">Registro de usuario</h1>
                 <p class="text-muted">Crea una cuenta para empezar a usar la plataforma.</p>
 
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <form method="POST" action="/register" class="mt-4">
                     @csrf
 

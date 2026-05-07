@@ -30,6 +30,19 @@ class EquipoController extends Controller
         return view('equipos.create');
     }
 
+    public function show(Equipo $equipo): View
+    {
+        $equipo->load(['capitan', 'usuarios', 'inscripciones.torneo']);
+
+        $resumen = [
+            'miembros' => $equipo->usuarios->count(),
+            'torneos' => $equipo->inscripciones->count(),
+            'capitan' => $equipo->capitan?->name,
+        ];
+
+        return view('equipos.show', compact('equipo', 'resumen'));
+    }
+
     public function historial(Equipo $equipo): View
     {
         $partidos = Partido::with(['torneo', 'equipo1', 'equipo2', 'equipoGanador'])
@@ -92,7 +105,7 @@ class EquipoController extends Controller
         ]);
 
         if (Auth::user()->equipos()->exists()) {
-            return back()->with('error', 'Ya perteneces a un equipo y no puedes crear otro.');
+            return back()->with('error', 'Ya formas parte de un equipo. Sal de tu equipo actual antes de crear uno nuevo.');
         }
 
         $equipo = Equipo::create([
@@ -102,7 +115,7 @@ class EquipoController extends Controller
 
         $equipo->usuarios()->attach(Auth::id());
 
-        return redirect('/equipos');
+        return redirect('/equipos')->with('success', 'El equipo se ha creado correctamente y ya eres su capitan.');
     }
 
     public function unirse(int $id): RedirectResponse
@@ -111,14 +124,14 @@ class EquipoController extends Controller
         $user = Auth::user();
 
         if ($user->equipos()->exists()) {
-            return back()->with('error', 'Ya perteneces a un equipo.');
+            return back()->with('error', 'Ya formas parte de un equipo y no puedes unirte a otro.');
         }
 
         if (! $equipo->usuarios->contains($user->id)) {
             $equipo->usuarios()->attach($user->id);
         }
 
-        return redirect('/equipos');
+        return redirect('/equipos')->with('success', 'Te has unido al equipo correctamente.');
     }
 
     public function expulsarMiembro(Equipo $equipo, int $usuarioId): RedirectResponse
@@ -130,16 +143,16 @@ class EquipoController extends Controller
         }
 
         if ((int) $usuarioId === (int) $capitan->id) {
-            return back()->with('error', 'No puedes expulsarte a ti mismo. Usa la opcion de salir del equipo.');
+            return back()->with('error', 'No puedes expulsarte a ti mismo desde aqui. Usa la opcion de salir del equipo.');
         }
 
         if (! $equipo->usuarios()->where('users.id', $usuarioId)->exists()) {
-            return back()->with('error', 'Ese usuario no pertenece al equipo.');
+            return back()->with('error', 'El usuario seleccionado ya no pertenece a este equipo.');
         }
 
         $equipo->usuarios()->detach($usuarioId);
 
-        return back()->with('success', 'Miembro expulsado del equipo.');
+        return back()->with('success', 'El miembro ha sido expulsado del equipo correctamente.');
     }
 
     public function salir(Equipo $equipo): RedirectResponse
@@ -147,7 +160,7 @@ class EquipoController extends Controller
         $user = Auth::user();
 
         if (! $equipo->usuarios()->where('users.id', $user->id)->exists()) {
-            return back()->with('error', 'No perteneces a este equipo.');
+            return back()->with('error', 'No puedes salir de este equipo porque no formas parte de el.');
         }
 
         $equipo->usuarios()->detach($user->id);

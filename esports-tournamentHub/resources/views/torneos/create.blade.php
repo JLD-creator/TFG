@@ -5,16 +5,6 @@
         <h1 class="display-6 fw-bold mb-3">Crear torneo</h1>
         <p class="text-muted">Define la competicion y dejala lista para inscripciones y bracket.</p>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <form method="POST" action="/torneos" class="mt-4">
             @csrf
 

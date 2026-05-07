@@ -9,22 +9,6 @@
                     {{ $partido->equipo1?->nombre_equipo ?? 'Equipo 1' }} vs {{ $partido->equipo2?->nombre_equipo ?? 'Equipo 2' }}
                 </p>
 
-                @if (session('error'))
-                    <div class="alert alert-danger">
-                        <p class="mb-0">{{ session('error') }}</p>
-                    </div>
-                @endif
-
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <form method="POST" action="/partidos/{{ $partido->id_partido }}/resultado" class="mt-4">
                     @csrf
 

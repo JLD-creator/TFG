@@ -7,16 +7,6 @@
                 <h1 class="h2 fw-bold mb-3">Iniciar sesion</h1>
                 <p class="text-muted">Accede para gestionar tus equipos, torneos y resultados.</p>
 
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <form method="POST" action="/login" class="mt-4">
                     @csrf
 

@@ -56,7 +56,7 @@ class AuthController extends Controller
 
         return back()
             ->withErrors([
-                'email' => 'Credenciales incorrectas',
+                'email' => 'El correo o la contrasena no son correctos.',
             ])
             ->onlyInput('email');
     }

@@ -138,6 +138,11 @@
             border-radius: 1rem;
         }
 
+        .alert-hub {
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+        }
+
         @media (max-width: 768px) {
             main.container {
                 padding-left: 1rem;
@@ -192,6 +197,7 @@
     </nav>
 
     <main class="container py-4 py-lg-5">
+        @include('components.flash-messages')
         @yield('content')
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

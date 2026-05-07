@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/perfil', [ProfileController::class, 'update']);
 
     Route::get('/equipos', [EquipoController::class, 'index']);
+    Route::get('/equipos/{equipo}', [EquipoController::class, 'show']);
     Route::get('/equipos/{equipo}/historial', [EquipoController::class, 'historial']);
     Route::get('/torneos', [TorneoController::class, 'index']);
     Route::get('/torneos/{id}/bracket', [PartidoController::class, 'verBracket']);

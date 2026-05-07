@@ -97,4 +97,54 @@ class LeagueTournamentTest extends TestCase
         $this->assertSame(2, $partido->resultado_equipo1);
         $this->assertSame(2, $partido->resultado_equipo2);
     }
+
+    public function test_direct_elimination_with_odd_teams_creates_a_bye_in_first_round(): void
+    {
+        $organizador = User::factory()->create(['rol' => 'organizador']);
+        $torneo = Torneo::create([
+            'nombre' => 'Copa Valorant',
+            'juego' => 'Valorant',
+            'tipo_torneo' => 'eliminacion',
+            'fecha_inicio' => '2026-05-25',
+            'normas' => 'Eliminacion directa.',
+            'estado' => 'abierto',
+        ]);
+
+        $equipos = collect(range(1, 5))->map(function (int $indice) {
+            $capitan = User::factory()->create([
+                'rol' => 'jugador',
+                'email' => "capitan-elim-{$indice}@example.com",
+            ]);
+
+            $equipo = Equipo::create([
+                'nombre_equipo' => "Equipo Eliminacion {$indice}",
+                'id_capitan' => $capitan->id,
+            ]);
+
+            $equipo->usuarios()->attach($capitan->id);
+
+            return $equipo;
+        });
+
+        foreach ($equipos as $equipo) {
+            Inscripcion::create([
+                'id_torneo' => $torneo->id_torneo,
+                'id_equipo' => $equipo->id_equipo,
+            ]);
+        }
+
+        $response = $this->actingAs($organizador)->post("/torneos/{$torneo->id_torneo}/bracket");
+
+        $response->assertSessionHasNoErrors();
+
+        $partidos = Partido::where('id_torneo', $torneo->id_torneo)->get();
+
+        $this->assertSame(3, $partidos->count());
+        $this->assertTrue($partidos->contains(function (Partido $partido) {
+            return $partido->id_equipo1 === $partido->id_equipo2
+                && $partido->ganador !== null
+                && $partido->resultado_equipo1 === 1
+                && $partido->resultado_equipo2 === 0;
+        }));
+    }
 }

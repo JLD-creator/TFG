@@ -45,6 +45,6 @@ class ProfileController extends Controller
 
         $user->update($data);
 
-        return back()->with('success', 'Perfil actualizado correctamente.');
+        return back()->with('success', 'Tu perfil se ha actualizado correctamente.');
     }
 }

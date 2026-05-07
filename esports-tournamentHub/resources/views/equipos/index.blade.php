@@ -11,28 +11,6 @@
         @endif
     </div>
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            <p class="mb-0">{{ session('success') }}</p>
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="alert alert-danger">
-            <p class="mb-0">{{ session('error') }}</p>
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     @if (auth()->user()->esJugador() && $invitacionesPendientes->isNotEmpty())
         <div class="glass-card p-4 mb-4">
             <h2 class="h4 fw-bold mb-3">Invitaciones pendientes</h2>
@@ -82,7 +60,8 @@
                             Solo los jugadores pueden crear equipos y unirse a ellos.
                         @endif
                     </p>
-                    <div class="mt-3">
+                    <div class="mt-3 d-flex flex-wrap gap-2">
+                        <a href="/equipos/{{ $equipo->id_equipo }}" class="btn btn-sm btn-outline-light">Ver detalle</a>
                         <a href="/equipos/{{ $equipo->id_equipo }}/historial" class="btn btn-sm btn-outline-info">Ver historial de partidos</a>
                     </div>
                 </div>

@@ -26,19 +26,19 @@ class InvitacionEquipoController extends Controller
         $invitado = User::where('email', $validated['email'])->first();
 
         if (! $invitado) {
-            return back()->with('error', 'No existe ningun usuario registrado con ese email.');
+            return back()->with('error', 'No existe ningun usuario registrado con ese correo electronico.');
         }
 
         if ((int) $invitado->id === (int) $user->id) {
-            return back()->with('error', 'No puedes invitarte a ti mismo.');
+            return back()->with('error', 'No puedes enviarte una invitacion a ti mismo.');
         }
 
         if ($equipo->usuarios()->where('users.id', $invitado->id)->exists()) {
-            return back()->with('error', 'Ese usuario ya pertenece al equipo.');
+            return back()->with('error', 'Ese usuario ya forma parte de este equipo.');
         }
 
         if ($invitado->equipos()->exists()) {
-            return back()->with('error', 'Ese usuario ya pertenece a otro equipo.');
+            return back()->with('error', 'Ese usuario ya forma parte de otro equipo.');
         }
 
         $invitacionPendiente = InvitacionEquipo::where('id_equipo', $equipo->id_equipo)
@@ -47,7 +47,7 @@ class InvitacionEquipoController extends Controller
             ->exists();
 
         if ($invitacionPendiente) {
-            return back()->with('error', 'Ya existe una invitacion pendiente para ese usuario.');
+            return back()->with('error', 'Ese usuario ya tiene una invitacion pendiente para este equipo.');
         }
 
         InvitacionEquipo::create([
@@ -57,7 +57,7 @@ class InvitacionEquipoController extends Controller
             'estado' => 'pendiente',
         ]);
 
-        return back()->with('success', 'Invitacion enviada correctamente.');
+        return back()->with('success', 'La invitacion se ha enviado correctamente.');
     }
 
     public function accept(InvitacionEquipo $invitacion): RedirectResponse
@@ -69,11 +69,11 @@ class InvitacionEquipoController extends Controller
         }
 
         if ($invitacion->estado !== 'pendiente') {
-            return back()->with('error', 'Esta invitacion ya fue procesada.');
+            return back()->with('error', 'Esta invitacion ya se habia procesado anteriormente.');
         }
 
         if ($user->equipos()->exists()) {
-            return back()->with('error', 'Ya perteneces a un equipo.');
+            return back()->with('error', 'Ya formas parte de un equipo y no puedes aceptar esta invitacion.');
         }
 
         $invitacion->equipo->usuarios()->attach($user->id);
@@ -84,7 +84,7 @@ class InvitacionEquipoController extends Controller
             ->where('id_invitacion', '!=', $invitacion->id_invitacion)
             ->update(['estado' => 'rechazada']);
 
-        return back()->with('success', 'Te has unido al equipo correctamente.');
+        return back()->with('success', 'Has aceptado la invitacion y ya formas parte del equipo.');
     }
 
     public function reject(InvitacionEquipo $invitacion): RedirectResponse
@@ -96,11 +96,11 @@ class InvitacionEquipoController extends Controller
         }
 
         if ($invitacion->estado !== 'pendiente') {
-            return back()->with('error', 'Esta invitacion ya fue procesada.');
+            return back()->with('error', 'Esta invitacion ya se habia procesado anteriormente.');
         }
 
         $invitacion->update(['estado' => 'rechazada']);
 
-        return back()->with('success', 'Invitacion rechazada.');
+        return back()->with('success', 'La invitacion se ha rechazado correctamente.');
     }
 }

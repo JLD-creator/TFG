@@ -8,28 +8,6 @@
         </div>
     </div>
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            <p class="mb-0">{{ session('success') }}</p>
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="alert alert-danger">
-            <p class="mb-0">{{ session('error') }}</p>
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <div class="glass-card p-4">
         <div class="table-responsive">
             <table class="table table-dark table-striped align-middle mb-0">

@@ -5,16 +5,6 @@
         <h1 class="display-6 fw-bold mb-3">Crear equipo</h1>
         <p class="text-muted">Pon un nombre al equipo y quedara asociado a tu usuario como capitan.</p>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <form method="POST" action="/equipos" class="mt-4">
             @csrf
 

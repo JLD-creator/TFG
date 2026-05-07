@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Torneo extends Model
 {
+    public const ESTADO_ABIERTO = 'abierto';
+
+    public const ESTADO_EN_CURSO = 'en_curso';
+
+    public const ESTADO_FINALIZADO = 'finalizado';
+
     protected $fillable = [
         'nombre',
         'juego',
@@ -28,5 +34,20 @@ class Torneo extends Model
     public function partidos(): HasMany
     {
         return $this->hasMany(Partido::class, 'id_torneo', 'id_torneo');
+    }
+
+    public function estaAbierto(): bool
+    {
+        return $this->estado === self::ESTADO_ABIERTO;
+    }
+
+    public function estaEnCurso(): bool
+    {
+        return $this->estado === self::ESTADO_EN_CURSO;
+    }
+
+    public function estaFinalizado(): bool
+    {
+        return $this->estado === self::ESTADO_FINALIZADO;
     }
 }

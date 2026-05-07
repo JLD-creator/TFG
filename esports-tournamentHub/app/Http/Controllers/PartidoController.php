@@ -22,8 +22,12 @@ class PartidoController extends Controller
     {
         $partido = Partido::with('torneo')->findOrFail($id);
 
+        if (! $partido->torneo->estaEnCurso()) {
+            return back()->with('error', 'No puedes registrar resultados porque el torneo no esta en curso.');
+        }
+
         if ($partido->resultado_equipo1 !== null || $partido->resultado_equipo2 !== null) {
-            return back()->with('error', 'Este partido ya tiene resultado');
+            return back()->with('error', 'Este partido ya tiene un resultado registrado.');
         }
 
         $datos = $request->validate([
@@ -58,7 +62,7 @@ class PartidoController extends Controller
         if ($partido->torneo->tipo_torneo === 'liga') {
             $this->finalizarLigaSiCorresponde($torneoId);
 
-            return redirect('/torneos')->with('success', 'Resultado guardado');
+            return redirect('/torneos')->with('success', 'El resultado se ha guardado correctamente.');
         }
 
         $pendientes = Partido::where('id_torneo', $torneoId)
@@ -70,7 +74,7 @@ class PartidoController extends Controller
             $this->generarSiguienteRonda($torneoId, $rondaActual);
         }
 
-        return redirect('/torneos')->with('success', 'Resultado guardado');
+        return redirect('/torneos')->with('success', 'El resultado se ha guardado correctamente.');
     }
 
     public function verBracket(int $torneoId): View
@@ -100,7 +104,7 @@ class PartidoController extends Controller
             ->values();
 
         if ($ganadores->count() === 1) {
-            Torneo::where('id_torneo', $torneoId)->update(['estado' => 'finalizado']);
+            Torneo::where('id_torneo', $torneoId)->update(['estado' => Torneo::ESTADO_FINALIZADO]);
 
             return;
         }
@@ -119,7 +123,7 @@ class PartidoController extends Controller
 
         if ($ganadores->count() <= 1) {
             if ($ganadores->count() === 1) {
-                Torneo::where('id_torneo', $torneoId)->update(['estado' => 'finalizado']);
+                Torneo::where('id_torneo', $torneoId)->update(['estado' => Torneo::ESTADO_FINALIZADO]);
             }
 
             return;
@@ -177,7 +181,7 @@ class PartidoController extends Controller
             ->count();
 
         if ($pendientes === 0) {
-            Torneo::where('id_torneo', $torneoId)->update(['estado' => 'finalizado']);
+            Torneo::where('id_torneo', $torneoId)->update(['estado' => Torneo::ESTADO_FINALIZADO]);
         }
     }
 

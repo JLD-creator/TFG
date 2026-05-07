@@ -11,28 +11,6 @@
         @endif
     </div>
 
-    @if (session('error'))
-        <div class="alert alert-danger">
-            <p>{{ session('error') }}</p>
-        </div>
-    @endif
-
-    @if (session('success'))
-        <div class="alert alert-success">
-            <p>{{ session('success') }}</p>
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     @forelse($torneos as $torneo)
         <div class="glass-card p-4 mb-3">
             <div class="row g-3 align-items-start">
@@ -49,14 +27,14 @@
 
                 <div class="col-lg-6">
                     <div class="d-flex flex-wrap gap-2 justify-content-lg-end">
-                        @if (auth()->user()->esJugador())
+                        @if (auth()->user()->esJugador() && $torneo->estaAbierto())
                             <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/inscribirse" class="mb-0">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-light">Inscribirse</button>
                             </form>
                         @endif
 
-                        @if (auth()->user()->tieneRol('organizador', 'admin'))
+                        @if (auth()->user()->tieneRol('organizador', 'admin') && $torneo->estaAbierto())
                             <form method="POST" action="/torneos/{{ $torneo->id_torneo }}/bracket" class="mb-0">
                                 @csrf
                                 <button type="submit" class="btn btn-primary">Generar Bracket</button>
