@@ -43,7 +43,7 @@
         <h2 class="h4 fw-bold mb-3">Torneos disputados</h2>
 
         @if ($torneosDisputados->isEmpty())
-            <div class="alert alert-info">Este equipo todavia no ha participado en ningun torneo.</div>
+            <div class="alert alert-info">Este equipo todavía no ha participado en ningún torneo.</div>
         @else
             <div class="table-responsive mb-4">
                 <table class="table table-dark table-striped align-middle mb-0">
@@ -82,7 +82,7 @@
         <h2 class="h4 fw-bold mb-3">Partidos</h2>
 
         @if ($partidos->isEmpty())
-            <div class="alert alert-info mb-0">Este equipo todavia no ha disputado ningun partido.</div>
+            <div class="alert alert-info mb-0">Este equipo todavía no ha disputado ningún partido.</div>
         @else
             <div class="table-responsive">
                 <table class="table table-dark table-striped align-middle mb-0">

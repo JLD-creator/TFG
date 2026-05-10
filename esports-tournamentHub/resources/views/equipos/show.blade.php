@@ -15,7 +15,7 @@
     <div class="row g-4 mb-4">
         <div class="col-md-4">
             <div class="glass-card p-4 h-100">
-                <div class="small text-uppercase text-muted">Capitan</div>
+                <div class="small text-uppercase text-muted">Capitán</div>
                 <div class="fs-4 fw-bold">{{ $resumen['capitan'] ?? 'Sin asignar' }}</div>
             </div>
         </div>
@@ -41,7 +41,7 @@
                 <h2 class="h4 fw-bold mb-3">Miembros del equipo</h2>
 
                 @if ($equipo->usuarios->isEmpty())
-                    <div class="alert alert-info mb-0">Este equipo todavia no tiene miembros registrados.</div>
+                    <div class="alert alert-info mb-0">Este equipo todavía no tiene miembros registrados.</div>
                 @else
                     <ul class="list-group">
                         @foreach ($equipo->usuarios as $miembro)
@@ -51,7 +51,7 @@
                                     <span class="text-muted">({{ $miembro->email }})</span>
                                 </div>
                                 @if ((int) $equipo->id_capitan === (int) $miembro->id)
-                                    <span class="badge text-bg-success">Capitan</span>
+                                    <span class="badge text-bg-success">Capitán</span>
                                 @endif
                             </li>
                         @endforeach
@@ -65,7 +65,7 @@
                 <h2 class="h4 fw-bold mb-3">Torneos inscritos</h2>
 
                 @if ($equipo->inscripciones->isEmpty())
-                    <div class="alert alert-info mb-0">Este equipo todavia no se ha inscrito en ningun torneo.</div>
+                    <div class="alert alert-info mb-0">Este equipo todavía no se ha inscrito en ningún torneo.</div>
                 @else
                     <ul class="list-group">
                         @foreach ($equipo->inscripciones as $inscripcion)

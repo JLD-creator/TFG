@@ -3,7 +3,7 @@
 @section('content')
     <div class="glass-card p-4 p-lg-5">
         <h1 class="display-6 fw-bold mb-3">Crear equipo</h1>
-        <p class="text-muted">Pon un nombre al equipo y quedara asociado a tu usuario como capitan.</p>
+        <p class="text-muted">Pon un nombre al equipo y quedará asociado a tu usuario como capitán.</p>
 
         <form method="POST" action="/equipos" class="mt-4">
             @csrf

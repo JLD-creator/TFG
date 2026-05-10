@@ -4,7 +4,7 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
             <h1 class="display-6 fw-bold mb-1">Equipos</h1>
-            <p class="text-muted mb-0">Gestiona equipos, envia invitaciones y unete a uno existente.</p>
+            <p class="text-muted mb-0">Gestiona equipos, envía invitaciones y únete a uno existente.</p>
         </div>
         @if (auth()->user()->esJugador())
             <a href="/equipos/create" class="btn btn-primary">Crear equipo</a>
@@ -21,7 +21,7 @@
                         <div>
                             <div class="fw-semibold">{{ $invitacion->equipo->nombre_equipo }}</div>
                             <div class="text-muted">
-                                Invitacion enviada por {{ $invitacion->invitador->name }} ({{ $invitacion->invitador->email }})
+                                Invitación enviada por {{ $invitacion->invitador->name }} ({{ $invitacion->invitador->email }})
                             </div>
                         </div>
 
@@ -48,14 +48,14 @@
                 <div>
                     <h3 class="h4 mb-1">{{ $equipo->nombre_equipo }}</h3>
                     <p class="mb-1">
-                        <strong>Capitan:</strong> {{ $equipo->capitan->name ?? 'Sin asignar' }}
+                        <strong>Capitán:</strong> {{ $equipo->capitan->name ?? 'Sin asignar' }}
                     </p>
                     <p class="mb-1">
                         <strong>Miembros:</strong> {{ $equipo->usuarios->count() }}
                     </p>
                     <p class="text-muted mb-0">
                         @if (auth()->user()->esJugador())
-                            Equipo disponible para unirse o gestionar si eres su capitan.
+                            Equipo disponible para unirse o gestionar si eres su capitán.
                         @else
                             Solo los jugadores pueden crear equipos y unirse a ellos.
                         @endif
@@ -76,7 +76,7 @@
                                         <span class="fw-semibold">{{ $miembro->name }}</span>
                                         <span class="text-muted">({{ $miembro->email }})</span>
                                         @if ((int) $equipo->id_capitan === (int) $miembro->id)
-                                            <span class="badge text-bg-success ms-2">Capitan</span>
+                                            <span class="badge text-bg-success ms-2">Capitán</span>
                                         @endif
                                     </div>
 
@@ -112,21 +112,25 @@
                                     placeholder="email@jugador.com"
                                     required
                                 >
-                                <button type="submit" class="btn btn-primary">Enviar invitacion</button>
+                                <button type="submit" class="btn btn-primary">Enviar invitación</button>
                             </form>
                         </div>
                     @endif
 
-                    @if (auth()->user()->esJugador() && ! $equipo->usuarios->contains(auth()->id()))
+                    @if (auth()->user()->esJugador() && ! $equipo->usuarios->contains(auth()->id()) && ! in_array($equipo->id_equipo, $equiposBloqueadosParaReingreso, true))
                         <form method="POST" action="/equipos/{{ $equipo->id_equipo }}/unirse" class="mb-0">
                             @csrf
                             <button type="submit" class="btn btn-outline-light">Unirse</button>
                         </form>
+                    @elseif (auth()->user()->esJugador() && in_array($equipo->id_equipo, $equiposBloqueadosParaReingreso, true))
+                        <div class="small text-warning">
+                            Ya saliste de este equipo. Para volver, el capitán debe invitarte otra vez.
+                        </div>
                     @endif
                 </div>
             </div>
         </div>
     @empty
-        <div class="alert alert-info">No hay equipos creados todavia.</div>
+        <div class="alert alert-info">No hay equipos creados todavía.</div>
     @endforelse
 @endsection

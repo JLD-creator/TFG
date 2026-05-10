@@ -5,7 +5,7 @@
         <div class="col-lg-8">
             <div class="glass-card p-4 p-lg-5">
                 <h1 class="display-6 fw-bold mb-3">Mi perfil</h1>
-                <p class="text-muted">Actualiza tus datos personales y cambia tu contrasena cuando lo necesites.</p>
+                <p class="text-muted">Actualiza tus datos personales y cambia tu contraseña cuando lo necesites.</p>
 
                 <form method="POST" action="/perfil" class="mt-4">
                     @csrf
@@ -39,39 +39,39 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="current_password" class="form-label">Contrasena actual</label>
+                                <label for="current_password" class="form-label">Contraseña actual</label>
                                 <input
                                     id="current_password"
                                     class="form-control"
                                     type="password"
                                     name="current_password"
-                                    placeholder="Solo si cambias la contrasena"
+                                    placeholder="Solo si cambias la contraseña"
                                 >
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="password" class="form-label">Nueva contrasena</label>
+                                <label for="password" class="form-label">Nueva contraseña</label>
                                 <input
                                     id="password"
                                     class="form-control"
                                     type="password"
                                     name="password"
-                                    placeholder="Minimo 8 caracteres"
+                                    placeholder="Mínimo 8 caracteres"
                                 >
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="password_confirmation" class="form-label">Confirmar contrasena</label>
+                                <label for="password_confirmation" class="form-label">Confirmar contraseña</label>
                                 <input
                                     id="password_confirmation"
                                     class="form-control"
                                     type="password"
                                     name="password_confirmation"
-                                    placeholder="Repite la nueva contrasena"
+                                    placeholder="Repite la nueva contraseña"
                                 >
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                 <div class="mb-3">
                     <div class="small text-uppercase text-muted">Equipos</div>
                     @if ($user->equipos->isEmpty())
-                        <p class="mb-0 text-muted">Todavia no perteneces a ningun equipo.</p>
+                        <p class="mb-0 text-muted">Todavía no perteneces a ningún equipo.</p>
                     @else
                         <ul class="list-group">
                             @foreach ($user->equipos as $equipo)

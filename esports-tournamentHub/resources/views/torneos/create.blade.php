@@ -3,7 +3,7 @@
 @section('content')
     <div class="glass-card p-4 p-lg-5">
         <h1 class="display-6 fw-bold mb-3">Crear torneo</h1>
-        <p class="text-muted">Define la competicion y dejala lista para inscripciones y bracket.</p>
+        <p class="text-muted">Define la competición y déjala lista para inscripciones y bracket.</p>
 
         <form method="POST" action="/torneos" class="mt-4">
             @csrf
@@ -21,7 +21,7 @@
             <div class="mb-3">
                 <label for="tipo_torneo" class="form-label">Tipo de torneo</label>
                 <select id="tipo_torneo" class="form-select" name="tipo_torneo">
-                    <option value="eliminacion" @selected(old('tipo_torneo') === 'eliminacion')>Eliminacion directa</option>
+                    <option value="eliminacion" @selected(old('tipo_torneo') === 'eliminacion')>Eliminación directa</option>
                     <option value="liga" @selected(old('tipo_torneo') === 'liga')>Liga</option>
                 </select>
             </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipo;
+use App\Models\EquipoBaja;
 use App\Models\InvitacionEquipo;
 use App\Models\Inscripcion;
 use App\Models\Partido;
@@ -21,8 +22,11 @@ class EquipoController extends Controller
             ->where('id_usuario_invitado', $user->id)
             ->where('estado', 'pendiente')
             ->get();
+        $equiposBloqueadosParaReingreso = EquipoBaja::where('id_usuario', $user->id)
+            ->pluck('id_equipo')
+            ->all();
 
-        return view('equipos.index', compact('equipos', 'invitacionesPendientes'));
+        return view('equipos.index', compact('equipos', 'invitacionesPendientes', 'equiposBloqueadosParaReingreso'));
     }
 
     public function create(): View
@@ -127,6 +131,14 @@ class EquipoController extends Controller
             return back()->with('error', 'Ya formas parte de un equipo y no puedes unirte a otro.');
         }
 
+        $necesitaNuevaInvitacion = EquipoBaja::where('id_equipo', $equipo->id_equipo)
+            ->where('id_usuario', $user->id)
+            ->exists();
+
+        if ($necesitaNuevaInvitacion) {
+            return back()->with('error', 'Ya habias salido de este equipo. Solo puedes volver si el capitan te envia una nueva invitacion.');
+        }
+
         if (! $equipo->usuarios->contains($user->id)) {
             $equipo->usuarios()->attach($user->id);
         }
@@ -162,6 +174,11 @@ class EquipoController extends Controller
         if (! $equipo->usuarios()->where('users.id', $user->id)->exists()) {
             return back()->with('error', 'No puedes salir de este equipo porque no formas parte de el.');
         }
+
+        EquipoBaja::updateOrCreate([
+            'id_equipo' => $equipo->id_equipo,
+            'id_usuario' => $user->id,
+        ]);
 
         $equipo->usuarios()->detach($user->id);
 

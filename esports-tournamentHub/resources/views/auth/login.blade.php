@@ -16,8 +16,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label">Contrasena</label>
-                        <input id="password" class="form-control" type="password" name="password" placeholder="Introduce tu contrasena">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input id="password" class="form-control" type="password" name="password" placeholder="Introduce tu contraseña">
                     </div>
 
                     <div class="d-grid gap-2">

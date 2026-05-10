@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipo;
+use App\Models\EquipoBaja;
 use App\Models\InvitacionEquipo;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -77,6 +78,9 @@ class InvitacionEquipoController extends Controller
         }
 
         $invitacion->equipo->usuarios()->attach($user->id);
+        EquipoBaja::where('id_equipo', $invitacion->id_equipo)
+            ->where('id_usuario', $user->id)
+            ->delete();
         $invitacion->update(['estado' => 'aceptada']);
 
         InvitacionEquipo::where('id_usuario_invitado', $user->id)

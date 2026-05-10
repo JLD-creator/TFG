@@ -7,7 +7,7 @@
                 <span class="badge text-bg-success mb-3 px-3 py-2">Proyecto TFG</span>
                 <h1 class="display-4 fw-bold">Plataforma de Torneos eSports</h1>
                 <p class="lead text-muted">
-                    Organiza equipos, crea torneos, genera brackets y registra resultados en una sola aplicacion.
+                    Organiza equipos, crea torneos, genera brackets y registra resultados en una sola aplicación.
                     La idea es que cualquier profesor pueda entrar y entender el flujo en pocos clics.
                 </p>
 

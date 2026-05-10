@@ -12,7 +12,7 @@
             </h1>
             <p class="text-muted mb-0">
                 @if ($torneo->tipo_torneo === 'liga')
-                    Visualiza jornadas, resultados y clasificacion del torneo.
+                    Visualiza jornadas, resultados y clasificación del torneo.
                 @else
                     Visualiza rondas, partidos y ganadores del torneo.
                 @endif
@@ -22,14 +22,14 @@
     </div>
 
     @if ($partidos->isEmpty())
-        <div class="alert alert-info">Este torneo todavia no tiene partidos generados.</div>
+        <div class="alert alert-info">Este torneo todavía no tiene partidos generados.</div>
     @else
         @if ($torneo->tipo_torneo === 'liga')
             <div class="glass-card p-4 mb-4">
-                <h2 class="h4 fw-bold mb-3">Clasificacion</h2>
+                <h2 class="h4 fw-bold mb-3">Clasificación</h2>
 
                 @if ($clasificacion->isEmpty())
-                    <p class="text-muted mb-0">Todavia no hay resultados suficientes para calcular la clasificacion.</p>
+                    <p class="text-muted mb-0">Todavía no hay resultados suficientes para calcular la clasificación.</p>
                 @else
                     <div class="table-responsive">
                         <table class="table table-dark table-striped align-middle mb-0">

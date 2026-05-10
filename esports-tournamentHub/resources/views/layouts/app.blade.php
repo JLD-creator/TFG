@@ -164,7 +164,7 @@
                     <a href="/" class="nav-link">Inicio</a>
                     <a href="/equipos" class="nav-link">Equipos</a>
                     <a href="/torneos" class="nav-link">Torneos</a>
-                    <a href="/estadisticas" class="nav-link">Estadisticas</a>
+                    <a href="/estadisticas" class="nav-link">Estadísticas</a>
                     @auth
                         <a href="/dashboard" class="nav-link">Dashboard</a>
                         <a href="/perfil" class="nav-link">Mi perfil</a>
@@ -200,6 +200,7 @@
         @include('components.flash-messages')
         @yield('content')
     </main>
+    @stack('scripts')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

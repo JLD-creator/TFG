@@ -47,6 +47,6 @@
             </div>
         </div>
     @empty
-        <div class="alert alert-info">No hay torneos creados todavia.</div>
+        <div class="alert alert-info">No hay torneos creados todavía.</div>
     @endforelse
 @endsection
