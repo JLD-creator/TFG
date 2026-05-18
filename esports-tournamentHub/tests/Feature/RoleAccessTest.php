@@ -73,4 +73,19 @@ class RoleAccessTest extends TestCase
 
         $this->assertSame('organizador', $jugador->rol);
     }
+
+    public function test_role_changes_done_in_database_are_reflected_without_logging_in_again(): void
+    {
+        $usuario = User::factory()->create(['rol' => 'jugador']);
+
+        $this->actingAs($usuario)
+            ->get('/admin/usuarios')
+            ->assertForbidden();
+
+        User::whereKey($usuario->id)->update([
+            'rol' => 'admin',
+        ]);
+
+        $this->get('/admin/usuarios')->assertOk();
+    }
 }
